@@ -1,42 +1,23 @@
-const textElement = document.getElementById('text')
-const optionButtonsElement = document.getElementById('option-buttons')
-
-let state = {}
+const text = document.querySelector('#dialogue')
+const buttonOne = document.querySelector('#buttonOne')
+const buttonTwo = document.querySelector('#buttonTwo')
 
 function startGame() {
-  state = {}
   showTextNode(1)
 }
 
 function showTextNode(textNodeIndex) {
-  const textNode = textNodes.find(textNode => textNode.id === textNodeIndex)
-  textElement.innerText = textNode.text
-  while (optionButtonsElement.firstChild) {
-    optionButtonsElement.removeChild(optionButtonsElement.firstChild)
-  }
-
-  textNode.options.forEach(option => {
-    if (showOption(option)) {
-      const button = document.createElement('button')
-      button.innerText = option.text
-      button.classList.add('btn')
-      button.addEventListener('click', () => selectOption(option))
-      optionButtonsElement.appendChild(button)
-    }
-  })
+  const textNode = cyoa.find(textNode => textNode.id === textNodeIndex)
+  text.textContent = textNode.prompt
+  buttonOne.textContent = textNode.options[0].choice
+  buttonOne.addEventListener('click', function() {nextNode(textNode.options[0])})
+  buttonTwo.textContent = textNode.options[1].choice
+  buttonTwo.addEventListener('click', function() {nextNode(textNode.options[1])})
 }
 
-function showOption(option) {
-  return option.requiredState == null || option.requiredState(state)
-}
-
-function selectOption(option) {
-  const nextTextNodeId = option.nextText
-  if (nextTextNodeId <= 0) {
-    return startGame()
-  }
-  state = Object.assign(state, option.setState)
-  showTextNode(nextTextNodeId)
+function nextNode(node) {
+  nextNodeID = node.nextText;
+  showTextNode(nextNodeID)
 }
 
 const textNodes = [
